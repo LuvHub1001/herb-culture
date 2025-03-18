@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from "react";
+import ErrorPage from "../../pages/ErrorPage";
 
 interface States {
   hasError: boolean;
@@ -32,7 +33,7 @@ class ErrorBoundary extends Component<Props, States> {
 
   render() {
     if (this.state.hasError) {
-      return <div>Global Error...!</div>;
+      return <ErrorPage />;
     }
     return this.props.children;
   }
