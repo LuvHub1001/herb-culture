@@ -32,7 +32,7 @@ const useFetch = <Params extends string, FetchResult>(
         .then(resolve)
         .catch((error: Error) => catchAsyncError(error)),
     );
-  }, [params]);
+  }, [params, config]);
 
   if (_promise && _status === "pending") {
     throw _promise;
