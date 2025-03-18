@@ -1,0 +1,15 @@
+.bg-spring {
+  @apply bg-[url('/assets/images/Spring.jpg')] bg-cover bg-center;
+}
+
+.bg-summer {
+  @apply bg-[url('/assets/images/Summer.jpg')] bg-cover bg-center;
+}
+
+.bg-authum {
+  @apply bg-[url('/assets/images/Authumn.jpg')] bg-cover bg-center;
+}
+
+.bg-winter {
+  @apply bg-[url('/assets/images/Winter.jpg')] bg-cover bg-center;
+}
