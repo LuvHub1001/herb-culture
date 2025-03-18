@@ -9,19 +9,19 @@ function Header() {
   return (
     <>
       {spring.includes(currentMonth) ? (
-        <div className="flex h-105 w-screen bg-spring bg-cover text-white">
+        <div className="flex flex-col h-105 w-screen bg-spring bg-cover text-white items-center justify-center">
           <InnerHeader />
         </div>
       ) : summer.includes(currentMonth) ? (
-        <div className="flex h-105 w-screen bg-summer text-blue-700">
+        <div className="flex flex-col h-105 w-screen bg-summer text-blue-700 items-center justify-center">
           <InnerHeader />
         </div>
       ) : autumn.includes(currentMonth) ? (
-        <div className="flex h-105 w-screen bg-authum text-yellow-900 ">
+        <div className="flex flex-col h-105 w-screen bg-authum text-yellow-900 items-center justify-center">
           <InnerHeader />
         </div>
       ) : winter.includes(currentMonth) ? (
-        <div className="flex h-105 w-screen bg-winter text-white">
+        <div className="flex flex-col h-105 w-screen bg-winter text-white items-center justify-center">
           <InnerHeader />
         </div>
       ) : null}
@@ -31,17 +31,16 @@ function Header() {
 
 function InnerHeader() {
   return (
-    <>
-      <div className="flex w-30 h-20  justify-center items-center">
-        <p className="mt-15 font-bold text-2xl cursor-pointer ">B & G</p>
+    <div className="w-full h-full relative flex flex-col items-center justify-center">
+      <div className="absolute top-5 left-5">
+        <p className="font-bold text-2xl cursor-pointer">B & G</p>
       </div>
-      <div className="flex w-screen  justify-center items-center">
-        <div>
-          <div className="text-5xl font-bold">CULTURE INFO</div>
-          <div className="mt-2 ml-0.5 text-2xl">문화행사 정보</div>
-        </div>
+
+      <div>
+        <div className="text-5xl font-bold">CULTURE INFO</div>
+        <div className="mt-2 ml-1 text-2xl">문화행사 정보</div>
       </div>
-    </>
+    </div>
   );
 }
 
