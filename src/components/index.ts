@@ -7,4 +7,7 @@ import Loading from "./common/Loading";
 // etc
 import SearchBar from "./etc/SearchBar";
 
-export { ErrorBoundary, Footer, Header, Loading, SearchBar };
+// event
+import EventFetch from "./event/EventFetch";
+
+export { ErrorBoundary, Footer, Header, Loading, SearchBar, EventFetch };
