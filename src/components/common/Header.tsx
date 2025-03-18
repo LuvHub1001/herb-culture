@@ -38,7 +38,7 @@ function InnerHeader() {
 
       <div>
         <div className="text-5xl font-bold">CULTURE INFO</div>
-        <div className="mt-2 ml-1 text-2xl">문화행사 정보</div>
+        <div className="mt-2 ml-1 text-2xl md: text-center">문화행사 정보</div>
       </div>
     </div>
   );
