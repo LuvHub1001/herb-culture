@@ -7,6 +7,7 @@ import RenderComponent from "./common/RenderComponent";
 
 // etc
 import SearchBar from "./etc/SearchBar";
+import AddressButton from "./etc/AddressButton";
 
 // event
 import EventFetch from "./event/EventFetch";
@@ -18,5 +19,6 @@ export {
   Loading,
   RenderComponent,
   SearchBar,
+  AddressButton,
   EventFetch,
 };
