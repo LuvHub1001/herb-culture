@@ -6,8 +6,9 @@ import "./App.css";
 function App() {
   return (
     <ErrorBoundary>
-      <Suspense fallback={<Loading />}></Suspense>
-      <PublicRouter />
+      <Suspense fallback={<Loading />}>
+        <PublicRouter />
+      </Suspense>
     </ErrorBoundary>
   );
 }
