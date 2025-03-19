@@ -8,7 +8,7 @@ function EventFetch() {
   return (
     eventRes && (
       <div className="flex w-screen justify-center mt-10">
-        <div className="grid w-1/2 grid-cols-3 gap-6">
+        <div className="grid w-10/12 grid-cols-5 gap-6">
           {eventRes.data.culturalEventInfo.row.map(
             (item: EventType, idx: number) => {
               return (
