@@ -4,7 +4,7 @@ import { Header, Footer } from "../components";
 function withCommonLayout(Component: ComponentType) {
   const WrappedComponent = () => {
     return (
-      <div>
+      <div className="overflow-x-hidden">
         <Header />
         <div>
           <Component />
