@@ -1,5 +1,12 @@
+import { SearchBar, EventFetch } from "../components";
+
 function MainPage() {
-  return <></>;
+  return (
+    <>
+      <SearchBar />
+      <EventFetch />
+    </>
+  );
 }
 
 export default MainPage;
