@@ -1,4 +1,5 @@
 export type EventType = {
+  LIST_TOTAL_COUNT: number;
   CODENAME: string;
   DATE: string;
   GUNAME: string;
