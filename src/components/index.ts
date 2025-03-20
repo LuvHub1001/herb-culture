@@ -8,6 +8,7 @@ import RenderComponent from "./common/RenderComponent";
 // etc
 import SearchBar from "./etc/SearchBar";
 import AddressButton from "./etc/AddressButton";
+import Pagination from "./etc/Pagination";
 
 // event
 import EventFetch from "./event/EventFetch";
@@ -20,5 +21,6 @@ export {
   RenderComponent,
   SearchBar,
   AddressButton,
+  Pagination,
   EventFetch,
 };
