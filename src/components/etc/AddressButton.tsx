@@ -6,11 +6,8 @@ function AddressButton() {
       <div className="grid grid-cols-10 gap-3">
         {AddressData.map((item) => {
           return (
-            <div>
-              <button
-                className="cursor-pointer bg-gray-400 rounded-2xl w-20 text-white"
-                key={item.id}
-              >
+            <div key={item.id}>
+              <button className="cursor-pointer bg-gray-400 rounded-2xl w-20 text-white">
                 {item.name}
               </button>
             </div>
