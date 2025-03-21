@@ -1,11 +1,14 @@
-import { SearchBar, EventFetch, AddressButton } from "../components";
+import { Suspense } from "react";
+import { SearchBar, EventFetch, AddressButton, Loading } from "../components";
 
 function MainPage() {
   return (
     <>
       <SearchBar />
       <AddressButton />
-      <EventFetch />
+      <Suspense fallback={<Loading />}>
+        <EventFetch />
+      </Suspense>
     </>
   );
 }
