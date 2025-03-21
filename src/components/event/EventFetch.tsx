@@ -5,6 +5,11 @@ import { Pagination } from "../";
 import { EventType } from "../../types/EventType";
 import { get } from "../../apis";
 
+/**
+ * todo
+ * ⭐ 무한 렌더링 해결..
+ */
+
 function EventFetch() {
   const [totalItems, setTotalItems] = useState<number>(0);
 
