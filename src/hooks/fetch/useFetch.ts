@@ -17,13 +17,10 @@ const useFetch = <Params extends string, FetchResult>(
   );
   const [_result, _setResult] = useState<Nullable<FetchResult>>(null);
 
-  const resolve = useCallback(
-    (res: FetchResult) => {
-      _setStatus("fulfilled");
-      _setResult(res);
-    },
-    [params],
-  );
+  const resolve = useCallback((res: FetchResult) => {
+    _setStatus("fulfilled");
+    _setResult(res);
+  }, []);
 
   useEffect(() => {
     _setStatus("pending");
@@ -32,7 +29,7 @@ const useFetch = <Params extends string, FetchResult>(
         .then(resolve)
         .catch((error: Error) => catchAsyncError(error)),
     );
-  }, [params, config]);
+  }, [params]);
 
   if (_promise && _status === "pending") {
     throw _promise;
