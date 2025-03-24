@@ -5,11 +5,6 @@ import { Pagination } from "../";
 import { EventType } from "../../types/EventType";
 import { get } from "../../apis";
 
-/**
- * todo
- * ⭐ 무한 렌더링 해결..
- */
-
 function EventFetch() {
   const [totalItems, setTotalItems] = useState<number>(0);
 
@@ -57,7 +52,7 @@ function EventFetch() {
                     </a>
                     <div className="p-2">
                       <div>
-                        {item.TITLE.length > 10
+                        {item.TITLE.length > 24
                           ? item.TITLE.slice(0, 24) + "..."
                           : item.TITLE}
                       </div>

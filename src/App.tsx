@@ -1,11 +1,14 @@
-import { ErrorBoundary } from "./components";
+import { Suspense } from "react";
+import { ErrorBoundary, Loading } from "./components";
 import PublicRouter from "./routers/PublicRouter";
 import "./App.css";
 
 function App() {
   return (
     <ErrorBoundary>
-      <PublicRouter />
+      <Suspense fallback={<Loading />}>
+        <PublicRouter />
+      </Suspense>
     </ErrorBoundary>
   );
 }
