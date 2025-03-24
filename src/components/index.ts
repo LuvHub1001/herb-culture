@@ -12,6 +12,7 @@ import Pagination from "./etc/Pagination";
 
 // event
 import EventFetch from "./event/EventFetch";
+import EventSkeleton from "./event/EventSkeleton";
 
 export {
   ErrorBoundary,
@@ -23,4 +24,5 @@ export {
   AddressButton,
   Pagination,
   EventFetch,
+  EventSkeleton,
 };
