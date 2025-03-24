@@ -4,13 +4,16 @@ import {
   EventFetch,
   AddressButton,
   EventSkeleton,
+  Loading,
 } from "../components";
 
 function MainPage() {
   return (
     <>
       <SearchBar />
-      <AddressButton />
+      <Suspense fallback={<Loading />}>
+        <AddressButton />
+      </Suspense>
       <Suspense
         fallback={
           <div className="flex w-screen justify-center mt-10">
