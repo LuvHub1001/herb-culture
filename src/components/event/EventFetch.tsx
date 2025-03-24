@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
-import { usePagination } from "../../hooks";
-import { useFetch } from "../../hooks";
+import { usePagination, useFetch } from "../../hooks";
+import { get } from "../../apis";
 import { Pagination } from "../";
 import { EventType } from "../../types/EventType";
-import { get } from "../../apis";
 
 function EventFetch() {
   const [totalItems, setTotalItems] = useState<number>(0);
-
   const { currentPage, setCurrentPage } = usePagination({
     totalItems,
     divider: 10,
@@ -33,7 +31,7 @@ function EventFetch() {
       <>
         <div className="flex w-screen justify-center mt-10">
           <div className="grid w-10/12 grid-cols-5 gap-6">
-            {eventRes.data.culturalEventInfo?.row?.map(
+            {eventRes?.data.culturalEventInfo?.row?.map(
               (item: EventType, idx: number) => {
                 return (
                   <div
@@ -52,8 +50,8 @@ function EventFetch() {
                     </a>
                     <div className="p-2">
                       <div>
-                        {item.TITLE.length > 24
-                          ? item.TITLE.slice(0, 24) + "..."
+                        {item.TITLE.length > 18
+                          ? item.TITLE.slice(0, 18) + "..."
                           : item.TITLE}
                       </div>
                       <div>구분: {item.CODENAME}</div>
