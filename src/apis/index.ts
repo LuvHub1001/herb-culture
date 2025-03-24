@@ -49,7 +49,6 @@ axiosInstance.interceptors.request.use(
         }
       }
     } else throw err;
-    return Promise.reject(err);
   },
 );
 
@@ -95,8 +94,6 @@ axiosInstance.interceptors.response.use(
         }
       }
     } else throw err;
-
-    return Promise.reject(err);
   },
 );
 
@@ -109,26 +106,32 @@ const backoffRequest = async (
   }, times);
 };
 
-export const get = async (url: string, config?: AxiosRequestConfig) => {
+export const get = async (
+  url: string,
+  config?: AxiosRequestConfig,
+): Promise<Response> => {
   return await axiosInstance.get(url, config);
 };
 
 export const post = async (
   url: string,
-  data: any,
-  config: AxiosRequestConfig,
-) => {
+  data: Request,
+  config?: AxiosRequestConfig,
+): Promise<Response> => {
   return await axiosInstance.post(url, data, config);
 };
 
 export const patch = async (
   url: string,
   data: Request,
-  config: AxiosRequestConfig,
-) => {
+  config?: AxiosRequestConfig,
+): Promise<Response> => {
   return await axiosInstance.patch(url, data, config);
 };
 
-export const remove = async (url: string, config: AxiosRequestConfig) => {
+export const remove = async (
+  url: string,
+  config?: AxiosRequestConfig,
+): Promise<Response> => {
   return await axiosInstance.delete(url, config);
 };
