@@ -3,6 +3,7 @@ import axios, {
   InternalAxiosRequestConfig,
   isAxiosError,
   HttpStatusCode,
+  AxiosResponse,
 } from "axios";
 
 const AXIOS_TIMEOUT = 3000;
@@ -106,32 +107,32 @@ const backoffRequest = async (
   }, times);
 };
 
-export const get = async (
+export const get = async <T = any>(
   url: string,
   config?: AxiosRequestConfig,
-): Promise<Response> => {
-  return await axiosInstance.get(url, config);
+): Promise<AxiosResponse<T>> => {
+  return await axiosInstance.get<T>(url, config);
 };
 
-export const post = async (
+export const post = async <T = any>(
   url: string,
-  data: Request,
+  data: any,
   config?: AxiosRequestConfig,
-): Promise<Response> => {
-  return await axiosInstance.post(url, data, config);
+): Promise<AxiosResponse<T>> => {
+  return await axiosInstance.post<T>(url, data, config);
 };
 
-export const patch = async (
+export const patch = async <T = any>(
   url: string,
-  data: Request,
+  data: any,
   config?: AxiosRequestConfig,
-): Promise<Response> => {
-  return await axiosInstance.patch(url, data, config);
+): Promise<AxiosResponse<T>> => {
+  return await axiosInstance.patch<T>(url, data, config);
 };
 
-export const remove = async (
+export const remove = async <T = any>(
   url: string,
   config?: AxiosRequestConfig,
-): Promise<Response> => {
-  return await axiosInstance.delete(url, config);
+): Promise<AxiosResponse<T>> => {
+  return await axiosInstance.delete<T>(url, config);
 };
