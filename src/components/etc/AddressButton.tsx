@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useAtom } from "jotai";
+import { currentGuAtom } from "../../jotai/atom.ts";
 import { useFetch, useAddress } from "../../hooks";
 import { get } from "../../apis";
 import { AddressData } from "../../lib/Address.ts";
 
 function AddressButton() {
-  const [currentGu, setCurrentGu] = useState<string>("강남구");
-  const { location } = useAddress();
+  const { location, buttonGu, handleButtonGu, setButtonGu } = useAddress();
+  const [currentGu, setCurrentGu] = useAtom(currentGuAtom);
 
   const AddressFetch = useFetch(
     get,
@@ -19,15 +21,24 @@ function AddressButton() {
 
   useEffect(() => {
     if (AddressFetch?.data?.documents && AddressFetch.data.documents[0]) {
-      setCurrentGu(AddressFetch.data.documents[0].address.region_2depth_name);
+      const detectedGu =
+        AddressFetch.data.documents[0].address.region_2depth_name;
+      setCurrentGu(detectedGu);
+      setButtonGu(detectedGu);
     }
   }, [AddressFetch?.data]);
+
+  useEffect(() => {
+    if (currentGu) {
+      setButtonGu(currentGu);
+    }
+  }, [currentGu]);
 
   return (
     <>
       <div className="flex justify-center mt-5">
         <div>
-          현재 접속 위치는 <span className="text-blue-500">{currentGu}</span>{" "}
+          현재 접속 위치는 <span className="text-blue-500">{currentGu}</span>
           입니다.
         </div>
       </div>
@@ -36,7 +47,12 @@ function AddressButton() {
           {AddressData.map((item) => {
             return (
               <div key={item.id}>
-                <button className="cursor-pointer bg-gray-400 rounded-2xl w-20 text-white">
+                <button
+                  className={`cursor-pointer rounded-2xl w-20 text-white ${
+                    buttonGu === item.name ? "bg-blue-500" : "bg-gray-400"
+                  }`}
+                  onClick={() => handleButtonGu(item.name)}
+                >
                   {item.name}
                 </button>
               </div>
