@@ -1,3 +1,5 @@
+import { useNavigate, useLocation } from "react-router-dom";
+
 function Header() {
   let currentMonth = new Date().getMonth() + 1;
 
@@ -30,10 +32,21 @@ function Header() {
 }
 
 function InnerHeader() {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/");
+    window.location.reload();
+  };
+
   return (
     <div className="w-full h-full relative flex flex-col items-center justify-center">
       <div className="absolute top-5 left-5">
-        <p className="font-bold text-2xl cursor-pointer">B & G</p>
+        <div
+          className="font-bold text-2xl cursor-pointer"
+          onClick={handleClick}
+        >
+          B & G
+        </div>
       </div>
 
       <div>
