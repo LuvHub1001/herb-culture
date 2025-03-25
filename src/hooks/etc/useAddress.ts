@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
-
-type LocationType = {
-  latitude: number;
-  longitude: number;
-};
+import { useEffect } from "react";
+import { useAtom } from "jotai";
+import { buttonGuAtom, locationAtom } from "../../jotai/atom";
 
 const useAddress = () => {
-  const [location, setLocation] = useState<LocationType | null>(null);
+  const [location, setLocation] = useAtom(locationAtom);
+  const [buttonGu, setButtonGu] = useAtom(buttonGuAtom);
+
+  const handleButtonGu = (guName: string) => {
+    setButtonGu(guName);
+  };
 
   useEffect(() => {
     const { geolocation } = navigator;
@@ -28,6 +30,9 @@ const useAddress = () => {
 
   return {
     location,
+    buttonGu,
+    handleButtonGu,
+    setButtonGu,
   };
 };
 
