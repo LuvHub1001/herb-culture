@@ -38,7 +38,8 @@ function AddressButton() {
     <>
       <div className="flex justify-center mt-5">
         <div>
-          현재 접속 위치는 <span className="text-blue-500">{currentGu}</span>
+          현재 접속 위치는{" "}
+          <span className="text-blue-500">{currentGu || "알 수 없음"}</span>
           입니다.
         </div>
       </div>
