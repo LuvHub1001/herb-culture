@@ -15,6 +15,7 @@ import EventSkeleton from "./event/EventSkeleton";
 
 // search
 import SearchBar from "./search/SearchBar";
+import SearchFetch from "./search/SearchFetch";
 
 export {
   ErrorBoundary,
@@ -23,6 +24,7 @@ export {
   Loading,
   RenderComponent,
   SearchBar,
+  SearchFetch,
   AddressButton,
   Pagination,
   EventFetch,

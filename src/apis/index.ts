@@ -6,7 +6,7 @@ import axios, {
   AxiosResponse,
 } from "axios";
 
-const AXIOS_TIMEOUT = 3000;
+const AXIOS_TIMEOUT = 8000;
 const RETRY_TIMEOUT = 1000;
 const RETRY_MAX_COUNT = 3;
 let RETRY_COUNT = 0;
