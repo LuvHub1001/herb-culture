@@ -1,1 +1,9 @@
-export const AddressData = [];
+export const CodeData = [
+  "전시/미술",
+  "교육/체험",
+  "축제-시민화합",
+  "클래식",
+  "뮤지컬/오페라",
+  "콘서트",
+  "어린이/청소년 문화행사",
+];

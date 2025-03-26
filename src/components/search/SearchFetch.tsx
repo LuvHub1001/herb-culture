@@ -4,6 +4,7 @@ import { get } from "../../apis";
 import { useFetch, usePagination } from "../../hooks";
 import { Pagination } from "../";
 import { EventType } from "../../types/EventType";
+import { CodeData } from "../../lib/Event";
 
 function SearchFetch() {
   const location = useLocation();
@@ -19,9 +20,7 @@ function SearchFetch() {
   const startIndex = (currentPage - 1) * 10 + 1;
   const endIndex = currentPage * 10;
 
-  const eventCategories = ["교육", "전시", "체험"];
-
-  const isCategory = eventCategories.some((category) =>
+  const isCategory = CodeData.some((category) =>
     searchKeyword?.includes(category),
   );
 
