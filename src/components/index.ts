@@ -6,13 +6,15 @@ import Loading from "./common/Loading";
 import RenderComponent from "./common/RenderComponent";
 
 // etc
-import SearchBar from "./etc/SearchBar";
 import AddressButton from "./etc/AddressButton";
 import Pagination from "./etc/Pagination";
 
 // event
 import EventFetch from "./event/EventFetch";
 import EventSkeleton from "./event/EventSkeleton";
+
+// search
+import SearchBar from "./search/SearchBar";
 
 export {
   ErrorBoundary,
