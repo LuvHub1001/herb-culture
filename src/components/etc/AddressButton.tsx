@@ -43,7 +43,7 @@ function AddressButton() {
         </div>
       </div>
       <div className="flex mt-5 justify-center">
-        <div className="grid grid-cols-10 gap-3">
+        <div className="grid grid-cols-10 gap-3 max-sm:grid-cols-4">
           {AddressData.map((item) => {
             return (
               <div key={item.id}>
