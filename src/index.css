@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .bg-spring {
   @apply bg-[url('/assets/images/Spring.jpg')] bg-cover bg-center;
 }

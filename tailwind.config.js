@@ -8,6 +8,12 @@ export default {
         },
       },
     },
+    screens: {
+      sm: "390px", // mobile
+      md: "640px", // tablet
+      lg: "1024px", // laptop
+      xl: "1280px", // desktop
+    },
   },
   plugins: [],
 };
