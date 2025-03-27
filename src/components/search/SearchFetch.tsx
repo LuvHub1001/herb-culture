@@ -52,7 +52,7 @@ function SearchFetch() {
         결과입니다.
       </div>
       <div className="flex w-screen justify-center mt-10">
-        <div className="grid w-10/12 grid-cols-5 gap-6">
+        <div className="grid w-10/12 grid-cols-5 gap-6 max-sm:grid-cols-2">
           {searchedData.map((item: EventType, idx: number) => (
             <div key={idx} className="border-2 border-[#EFEFEF] rounded-2xl">
               <a
@@ -71,9 +71,9 @@ function SearchFetch() {
                     ? item.TITLE.slice(0, 18) + "..."
                     : item.TITLE}
                 </div>
-                <div>구분: {item.CODENAME}</div>
-                <div>지역: {item.GUNAME}</div>
-                <div>기간: {item.DATE}</div>
+                <div className="max-sm:hidden">구분: {item.CODENAME}</div>
+                <div className="max-sm:hidden">지역: {item.GUNAME}</div>
+                <div className="max-sm:hidden">기간: {item.DATE}</div>
               </div>
             </div>
           ))}
