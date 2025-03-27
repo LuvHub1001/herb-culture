@@ -11,9 +11,15 @@ const RETRY_TIMEOUT = 1000;
 const RETRY_MAX_COUNT = 3;
 let RETRY_COUNT = 0;
 
+const baseURL =
+  import.meta.env.MODE === "production"
+    ? `/api/${import.meta.env.VITE_API_KEY}/json`
+    : "http://openapi.seoul.go.kr:8088/" +
+      import.meta.env.VITE_API_KEY +
+      "/json";
+
 const axiosInstance = axios.create({
-  baseURL:
-    "http://openapi.seoul.go.kr:8088/" + import.meta.env.VITE_API_KEY + "/json",
+  baseURL: baseURL,
   timeout: AXIOS_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
