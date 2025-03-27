@@ -31,17 +31,21 @@ function SearchFetch() {
       : `/culturalEventInfo/${startIndex}/${endIndex}/%20/${searchKeyword}`,
   );
 
-  console.log(searchKeyword);
-
   useEffect(() => {
     if (searchRes?.data?.culturalEventInfo?.list_total_count) {
-      const totalCount = searchRes.data.culturalEventInfo.list_total_count;
-      setTotalItems(totalCount);
+      const totalDataCount =
+        searchRes?.data.culturalEventInfo?.list_total_count;
+      setTotalItems(totalDataCount);
     }
   }, [searchRes]);
 
-  const temp = searchRes?.data?.culturalEventInfo?.row || [];
-  return temp.length > 0 ? (
+  const searchedData = searchRes?.data?.culturalEventInfo?.row || [];
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchKeyword]);
+
+  return searchedData.length > 0 ? (
     <>
       <div className="flex mt-10 justify-center font-bold text-2xl">
         <span className="text-red-400">"{searchKeyword}" &nbsp;</span>검색
@@ -49,7 +53,7 @@ function SearchFetch() {
       </div>
       <div className="flex w-screen justify-center mt-10">
         <div className="grid w-10/12 grid-cols-5 gap-6">
-          {temp.map((item: EventType, idx: number) => (
+          {searchedData.map((item: EventType, idx: number) => (
             <div key={idx} className="border-2 border-[#EFEFEF] rounded-2xl">
               <a
                 className="cursor-pointer"
@@ -77,15 +81,19 @@ function SearchFetch() {
       </div>
 
       <Pagination
+        key={searchKeyword}
         totalItems={totalItems}
         divider={10}
         onPageChange={setCurrentPage}
       />
     </>
   ) : (
-    <div className="flex mt-10 justify-center font-bold text-2xl">
-      <span className="text-red-400">"{searchKeyword}" &nbsp;</span>에 관한
-      정보가 없습니다.
+    <div className="flex h-105 mt-10 justify-center align-center font-bold text-2xl">
+      <div className="inline-block text-center">
+        <span className="text-red-400">"{searchKeyword}" &nbsp;</span>에 관한
+        정보가 없습니다.
+        <img className="w-100" src="/assets/images/X-character.jpg" />
+      </div>
     </div>
   );
 }
