@@ -86,7 +86,7 @@ function EventFetch() {
   return (
     <>
       <div className="flex w-screen justify-center mt-10">
-        <div className="grid w-10/12 grid-cols-5 gap-6">
+        <div className="grid w-10/12 grid-cols-5 gap-6 max-sm:grid-cols-2">
           {isLoading
             ? [...Array(10)].map((_, idx) => <EventSkeleton key={idx} />)
             : paginatedEvents.map((item: EventType, idx: number) => {
@@ -111,9 +111,9 @@ function EventFetch() {
                           ? item.TITLE.slice(0, 18) + "..."
                           : item.TITLE}
                       </div>
-                      <div>구분: {item.CODENAME}</div>
-                      <div>지역: {item.GUNAME}</div>
-                      <div>기간: {item.DATE}</div>
+                      <div className="max-sm:hidden">구분: {item.CODENAME}</div>
+                      <div className="max-sm:hidden">지역: {item.GUNAME}</div>
+                      <div className="max-sm:hidden">기간: {item.DATE}</div>
                     </div>
                   </div>
                 );
