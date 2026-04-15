@@ -14,7 +14,7 @@ function AddressButton() {
     `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${location?.longitude}&y=${location?.latitude}`,
     {
       headers: {
-        Authorization: `KakaoAK ${import.meta.env.VITE_KAKAO_KEY}`,
+        Authorization: `KakaoAK ${import.meta.env.VITE_KAKAO_REST_KEY}`,
       },
     },
   );
