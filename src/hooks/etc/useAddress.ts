@@ -4,6 +4,7 @@ import {
   buttonGuAtom,
   geoStatusAtom,
   locationAtom,
+  userSelectedGuAtom,
 } from "../../jotai/atom";
 
 const CACHE_KEY = "bg:location";
@@ -39,10 +40,14 @@ const useAddress = () => {
   const [location, setLocation] = useAtom(locationAtom);
   const [buttonGu, setButtonGu] = useAtom(buttonGuAtom);
   const setGeoStatus = useSetAtom(geoStatusAtom);
+  const setUserSelected = useSetAtom(userSelectedGuAtom);
 
   const handleButtonGu = useCallback(
-    (guName: string | null) => setButtonGu(guName),
-    [setButtonGu],
+    (guName: string | null) => {
+      setUserSelected(true);
+      setButtonGu(guName);
+    },
+    [setButtonGu, setUserSelected],
   );
 
   useEffect(() => {

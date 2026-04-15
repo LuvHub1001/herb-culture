@@ -1,6 +1,11 @@
 import { memo, useCallback, useEffect } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { buttonGuAtom, currentGuAtom, geoStatusAtom } from "../../jotai/atom";
+import {
+  buttonGuAtom,
+  currentGuAtom,
+  geoStatusAtom,
+  userSelectedGuAtom,
+} from "../../jotai/atom";
 import { useFetch, useAddress } from "../../hooks";
 import { get } from "../../apis";
 import { AddressData } from "../../lib/Address";
@@ -18,6 +23,7 @@ function GeoDetector({ location }: { location: LocationType }) {
   const setCurrentGu = useSetAtom(currentGuAtom);
   const setButtonGu = useSetAtom(buttonGuAtom);
   const setGeoStatus = useSetAtom(geoStatusAtom);
+  const userSelected = useAtomValue(userSelectedGuAtom);
 
   const addressFetch = useFetch(
     get,
@@ -31,12 +37,12 @@ function GeoDetector({ location }: { location: LocationType }) {
     const detectedGu = doc.address?.region_2depth_name;
     if (detectedGu && SEOUL_GU_SET.has(detectedGu)) {
       setCurrentGu(detectedGu);
-      setButtonGu(detectedGu);
+      // 사용자가 이미 직접 선택한 경우 감지 결과로 덮어쓰지 않음
+      if (!userSelected) setButtonGu(detectedGu);
     } else {
-      // 서울 밖이거나 구 이름 매칭 실패 → 전체 보기 + 수동 선택 유도
       setGeoStatus("unavailable");
     }
-  }, [addressFetch?.data, setCurrentGu, setButtonGu, setGeoStatus]);
+  }, [addressFetch?.data, setCurrentGu, setButtonGu, setGeoStatus, userSelected]);
 
   return null;
 }

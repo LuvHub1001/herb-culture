@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 
 export const buttonGuAtom = atom<string | null>(null);
+export const userSelectedGuAtom = atom<boolean>(false);
 export const locationAtom = atom<{
   latitude: number;
   longitude: number;
