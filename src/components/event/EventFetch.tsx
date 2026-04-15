@@ -78,14 +78,18 @@ function EventFetch() {
       const promises = Array.from({ length: totalRequests }, (_, i) => {
         const start = i * BATCH_SIZE + 1;
         const end = Math.min((i + 1) * BATCH_SIZE, totalDataCount);
-        return get(`/culturalEventInfo/${start}/${end}`);
+        // 모바일 느린 망에서 1000건 응답이 기본 8s 안에 못 오는 경우 대비
+        return get(`/culturalEventInfo/${start}/${end}`, { timeout: 30000 });
       });
 
       try {
-        const results = await Promise.all(promises);
+        // 일부 배치가 실패해도 성공한 배치라도 노출
+        const results = await Promise.allSettled(promises);
         if (cancelled) return;
-        const flat = results.flatMap(
-          (res) => res?.data?.culturalEventInfo?.row ?? [],
+        const flat = results.flatMap((r) =>
+          r.status === "fulfilled"
+            ? (r.value?.data?.culturalEventInfo?.row ?? [])
+            : [],
         );
         setAllEvents(flat);
       } catch (e) {
