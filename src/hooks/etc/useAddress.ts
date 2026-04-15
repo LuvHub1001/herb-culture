@@ -64,26 +64,53 @@ const useAddress = () => {
       return;
     }
 
-    geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude, accuracy } = pos.coords;
-        if (accuracy > ACCURACY_THRESHOLD_M) {
-          console.warn(
-            `[geolocation] accuracy too low (${accuracy}m). falling back to manual.`,
-          );
-          setGeoStatus("unavailable");
-          return;
-        }
-        setLocation({ latitude, longitude });
-        setGeoStatus("ok");
-        writeCache(latitude, longitude);
-      },
-      (err) => {
-        console.warn("geolocation error:", err);
-        setGeoStatus("unavailable");
-      },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 },
-    );
+    let settled = false;
+    const finish = (status: "ok" | "unavailable") => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(fallbackTimer);
+      setGeoStatus(status);
+    };
+
+    // iOS Safari 등에서 콜백이 영영 호출되지 않는 경우 대비
+    const fallbackTimer = setTimeout(() => finish("unavailable"), 12000);
+
+    const onSuccess: PositionCallback = (pos) => {
+      const { latitude, longitude, accuracy } = pos.coords;
+      if (accuracy > ACCURACY_THRESHOLD_M) {
+        console.warn(
+          `[geolocation] accuracy too low (${accuracy}m). falling back to manual.`,
+        );
+        finish("unavailable");
+        return;
+      }
+      setLocation({ latitude, longitude });
+      writeCache(latitude, longitude);
+      finish("ok");
+    };
+
+    const onError: PositionErrorCallback = (err) => {
+      console.warn("geolocation error:", err);
+      // 고정밀 실패 시 저정밀으로 1회 재시도
+      geolocation.getCurrentPosition(
+        onSuccess,
+        (err2) => {
+          console.warn("geolocation retry error:", err2);
+          finish("unavailable");
+        },
+        { enableHighAccuracy: false, maximumAge: 60000, timeout: 8000 },
+      );
+    };
+
+    geolocation.getCurrentPosition(onSuccess, onError, {
+      enableHighAccuracy: true,
+      maximumAge: 30000,
+      timeout: 8000,
+    });
+
+    return () => {
+      clearTimeout(fallbackTimer);
+    };
   }, [location, setLocation, setGeoStatus]);
 
   return { location, buttonGu, handleButtonGu, setButtonGu };

@@ -12,9 +12,12 @@ const KAKAO_HEADERS = {
   },
 };
 
+const SEOUL_GU_SET = new Set(AddressData.map((a) => a.name));
+
 function GeoDetector({ location }: { location: LocationType }) {
   const setCurrentGu = useSetAtom(currentGuAtom);
   const setButtonGu = useSetAtom(buttonGuAtom);
+  const setGeoStatus = useSetAtom(geoStatusAtom);
 
   const addressFetch = useFetch(
     get,
@@ -24,12 +27,16 @@ function GeoDetector({ location }: { location: LocationType }) {
 
   useEffect(() => {
     const doc = addressFetch?.data?.documents?.[0];
-    if (doc) {
-      const detectedGu = doc.address.region_2depth_name;
+    if (!doc) return;
+    const detectedGu = doc.address?.region_2depth_name;
+    if (detectedGu && SEOUL_GU_SET.has(detectedGu)) {
       setCurrentGu(detectedGu);
       setButtonGu(detectedGu);
+    } else {
+      // 서울 밖이거나 구 이름 매칭 실패 → 전체 보기 + 수동 선택 유도
+      setGeoStatus("unavailable");
     }
-  }, [addressFetch?.data, setCurrentGu, setButtonGu]);
+  }, [addressFetch?.data, setCurrentGu, setButtonGu, setGeoStatus]);
 
   return null;
 }
