@@ -26,9 +26,8 @@ const PAGE_SIZE = 12;
 const BATCH_SIZE = 1000;
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: "default", label: "기본순" },
-  { value: "endSoon", label: "종료 임박순" },
   { value: "newest", label: "최신순" },
+  { value: "endSoon", label: "종료 임박순" },
 ];
 
 interface ChipProps {
@@ -113,7 +112,7 @@ function EventFetch() {
       list = list.filter((e) => (e.CODENAME ?? "").includes(category));
     if (sort === "endSoon") {
       list = [...list].sort((a, b) => getEnd(a.DATE) - getEnd(b.DATE));
-    } else if (sort === "newest") {
+    } else {
       list = [...list].sort((a, b) => getStart(b.DATE) - getStart(a.DATE));
     }
     return list;
