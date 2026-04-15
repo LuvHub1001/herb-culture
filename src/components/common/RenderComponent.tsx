@@ -1,21 +1,30 @@
-import { ReactNode } from "react";
+import { ReactNode, memo } from "react";
 
 interface RenderProps<T> {
-  className: string;
+  className?: string;
   items: T[];
-  render: (item: T) => ReactNode;
+  render: (item: T, index: number) => ReactNode;
+  getKey?: (item: T, index: number) => string | number;
 }
 
-function RenderComponent<T>({ className, items, render }: RenderProps<T>) {
+function RenderComponentInner<T>({
+  className,
+  items,
+  render,
+  getKey,
+}: RenderProps<T>) {
+  if (!items?.length) return null;
   return (
-    items && (
-      <div className={className}>
-        {items.map((item, _idx: number) => {
-          return <div key={_idx}>{render(item)}</div>;
-        })}
-      </div>
-    )
+    <div className={className}>
+      {items.map((item, index) => (
+        <div key={getKey ? getKey(item, index) : index}>
+          {render(item, index)}
+        </div>
+      ))}
+    </div>
   );
 }
+
+const RenderComponent = memo(RenderComponentInner) as typeof RenderComponentInner;
 
 export default RenderComponent;

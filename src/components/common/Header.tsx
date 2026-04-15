@@ -1,65 +1,61 @@
+import { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
+type Season = "spring" | "summer" | "autumn" | "winter";
+
+const getSeason = (month: number): Season => {
+  if (month >= 3 && month <= 5) return "spring";
+  if (month >= 6 && month <= 8) return "summer";
+  if (month >= 9 && month <= 11) return "autumn";
+  return "winter";
+};
+
+const SEASON_CLASS: Record<Season, string> = {
+  spring: "hero-spring",
+  summer: "hero-summer",
+  autumn: "hero-autumn",
+  winter: "hero-winter",
+};
+
+const SEASON = getSeason(new Date().getMonth() + 1);
+
 function Header() {
-  let currentMonth = new Date().getMonth() + 1;
-
-  const spring = [3, 4, 5];
-  const summer = [6, 7, 8];
-  const autumn = [9, 10, 11];
-  const winter = [12, 1, 2];
-
-  return (
-    <>
-      {spring.includes(currentMonth) ? (
-        <div className="flex flex-col h-105 w-screen bg-spring bg-cover text-white items-center justify-center">
-          <InnerHeader />
-        </div>
-      ) : summer.includes(currentMonth) ? (
-        <div className="flex flex-col h-105 w-screen bg-summer text-blue-700 items-center justify-center">
-          <InnerHeader />
-        </div>
-      ) : autumn.includes(currentMonth) ? (
-        <div className="flex flex-col h-105 w-screen bg-authum text-yellow-900 items-center justify-center">
-          <InnerHeader />
-        </div>
-      ) : winter.includes(currentMonth) ? (
-        <div className="flex flex-col h-105 w-screen bg-winter text-white items-center justify-center">
-          <InnerHeader />
-        </div>
-      ) : null}
-    </>
-  );
-}
-
-function InnerHeader() {
   const navigate = useNavigate();
-  const handleClick = () => {
+
+  const goHome = useCallback(() => {
     navigate("/");
-    window.location.reload();
-  };
+  }, [navigate]);
 
   return (
-    <div className="w-full h-full relative flex flex-col items-center justify-center">
-      <div className="absolute top-5 left-5">
-        <div
-          className="font-bold text-2xl cursor-pointer"
-          onClick={handleClick}
+    <header
+      className={`relative w-full ${SEASON_CLASS[SEASON]} text-white`}
+      aria-label="site header"
+    >
+      <div className="absolute inset-0 bg-black/10" aria-hidden />
+      <div className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        <button
+          type="button"
+          onClick={goHome}
+          className="text-lg font-extrabold tracking-wide text-white/90 transition-colors hover:text-white uppercase tracking-[0.2em] text-white/85"
         >
-          B & G
-        </div>
+          Herb Culture
+        </button>
       </div>
 
-      <div>
-        <div
-          className="text-5xl font-bold cursor-pointer"
-          onClick={handleClick}
+      <div className="relative mx-auto flex max-w-6xl flex-col items-center justify-center px-6 pb-10 pt-8 text-center md:pb-14 md:pt-10">
+        <button
+          type="button"
+          onClick={goHome}
+          className="cursor-pointer text-3xl font-black leading-tight tracking-tight drop-shadow-md transition-opacity hover:opacity-90 md:text-5xl"
         >
           CULTURE INFO
-        </div>
-        <div className="mt-2 ml-1 text-2xl md: text-center">문화행사 정보</div>
+        </button>
+        <p className="mt-2 text-xs font-medium text-white/90 md:text-sm">
+          서울 곳곳의 전시, 공연, 축제를 한눈에
+        </p>
       </div>
-    </div>
+    </header>
   );
 }
 
-export default Header;
+export default memo(Header);

@@ -1,19 +1,17 @@
-// Common
 import ErrorBoundary from "./common/ErrorBoundary";
 import Footer from "./common/Footer";
 import Header from "./common/Header";
 import Loading from "./common/Loading";
 import RenderComponent from "./common/RenderComponent";
 
-// etc
 import AddressButton from "./etc/AddressButton";
 import Pagination from "./etc/Pagination";
 
-// event
 import EventFetch from "./event/EventFetch";
 import EventSkeleton from "./event/EventSkeleton";
+import EventCard from "./event/EventCard";
+import EventGrid from "./event/EventGrid";
 
-// search
 import SearchBar from "./search/SearchBar";
 import SearchFetch from "./search/SearchFetch";
 
@@ -29,4 +27,6 @@ export {
   Pagination,
   EventFetch,
   EventSkeleton,
+  EventCard,
+  EventGrid,
 };

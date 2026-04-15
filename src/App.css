@@ -1,11 +1,27 @@
-@font-face {
-  font-family: "Pretendard-Regular";
-  font-weight: 200;
-  font-display: "swap";
-  src: url("./assets/fonts/Pretendard-Regular.woff2"), format("woff2"),
-    local("Pretendard-Regular");
+.hero-spring {
+  background-image: linear-gradient(135deg, rgba(255, 182, 193, 0.55), rgba(255, 105, 180, 0.35)),
+    url("/assets/images/Spring.jpg");
+  background-size: cover;
+  background-position: center;
 }
 
-* {
-  font-family: "Pretendard-Regular";
+.hero-summer {
+  background-image: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(16, 185, 129, 0.35)),
+    url("/assets/images/Summer.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-autumn {
+  background-image: linear-gradient(135deg, rgba(234, 88, 12, 0.5), rgba(202, 138, 4, 0.35)),
+    url("/assets/images/Authumn.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-winter {
+  background-image: linear-gradient(135deg, rgba(30, 64, 175, 0.55), rgba(14, 165, 233, 0.35)),
+    url("/assets/images/Winter.jpg");
+  background-size: cover;
+  background-position: center;
 }

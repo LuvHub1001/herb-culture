@@ -1,16 +1,16 @@
+import { memo } from "react";
+
 function EventSkeleton() {
   return (
-    <div className="flex w-full h-auto bg-gray-400 rounded-2xl animate-pulse max-sm:w-10/12 max-sm:h-[300px] max-sm:mx-auto">
-      <div className="w-[310px] m-3 rounded-2xl max-sm:w-full max-sm:mx-auto max-sm:p-1">
-        <div>
-          <div className="bg-gray-300 rounded-tl-xl rounded-tr-xl">
-            <div className="h-[260px] max-sm:h-[200px]"></div>
-          </div>
-          <div className="h-[100px] mt-[10px] bg-gray-300 max-sm:h-[60px]"></div>
-        </div>
+    <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
+      <div className="aspect-[4/5] w-full skeleton-shimmer" />
+      <div className="space-y-2 p-4">
+        <div className="h-4 w-3/4 rounded skeleton-shimmer" />
+        <div className="h-3 w-1/2 rounded skeleton-shimmer" />
+        <div className="h-3 w-2/3 rounded skeleton-shimmer" />
       </div>
     </div>
   );
 }
 
-export default EventSkeleton;
+export default memo(EventSkeleton);

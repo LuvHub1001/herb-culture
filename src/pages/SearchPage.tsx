@@ -1,32 +1,45 @@
 import { Suspense } from "react";
-import { SearchBar, SearchFetch, EventSkeleton } from "../components";
+import { Link } from "react-router-dom";
+import { SearchBar, SearchFetch } from "../components";
+import EventGrid from "../components/event/EventGrid";
 
 function SearchPage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <SearchBar />
+
+      <div className="mx-auto mt-6 w-full max-w-6xl px-4 md:px-6">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-sm font-bold text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+        >
+          <svg
+            aria-hidden
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+          메인으로
+        </Link>
+      </div>
+
       <Suspense
         fallback={
-          <div className="flex w-screen justify-center mt-10">
-            <div className="grid w-10/12 grid-cols-5 gap-6 max-sm:grid-cols-2 max-sm:p-1 h-auto  max-sm:h-[348px]">
-              {[
-                ...Array(
-                  typeof window !== "undefined" && window.innerWidth < 640
-                    ? 4
-                    : 10,
-                ),
-              ].map((_, idx) => (
-                <div key={idx} className="h-[380px]">
-                  <EventSkeleton />
-                </div>
-              ))}
-            </div>
-          </div>
+          <section className="mx-auto w-full max-w-6xl px-4 py-10 md:px-6">
+            <EventGrid events={[]} loading skeletonCount={12} />
+          </section>
         }
       >
         <SearchFetch />
       </Suspense>
-    </div>
+    </>
   );
 }
 

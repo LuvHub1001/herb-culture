@@ -1,17 +1,84 @@
 @import "tailwindcss";
 
-.bg-spring {
-  @apply bg-[url('/assets/images/Spring.jpg')] bg-cover bg-center;
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./assets/fonts/Pretendard-Regular.woff2") format("woff2");
 }
 
-.bg-summer {
-  @apply bg-[url('/assets/images/Summer.jpg')] bg-cover bg-center;
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: #ececec;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --accent: #6366f1;
+  --accent-soft: #eef2ff;
 }
 
-.bg-authum {
-  @apply bg-[url('/assets/images/Authumn.jpg')] bg-cover bg-center;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Pretendard", system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-.bg-winter {
-  @apply bg-[url('/assets/images/Winter.jpg')] bg-cover bg-center;
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #eeeeee 0%,
+    #f5f5f5 50%,
+    #eeeeee 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.sort-select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23111827' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px;
 }

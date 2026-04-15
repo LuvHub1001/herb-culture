@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useCallback } from "react";
 import { usePagination } from "../../hooks";
 
 interface PaginationProps {
@@ -13,68 +13,95 @@ function Pagination({ totalItems, divider, onPageChange }: PaginationProps) {
     isFirstPage,
     isLastPage,
     pageNumbers,
-    handlePrevButton,
-    handleNextButton,
-    handleFirstButton,
-    handleLastButton,
+    totalPage,
     setCurrentPage,
   } = usePagination({ totalItems, divider });
 
-  useEffect(() => {
-    onPageChange(currentPage);
-  }, [currentPage, onPageChange]);
+  const goTo = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      onPageChange(page);
+    },
+    [setCurrentPage, onPageChange],
+  );
+
+  const goFirst = useCallback(() => goTo(1), [goTo]);
+  const goLast = useCallback(() => goTo(totalPage), [goTo, totalPage]);
+  const goPrev = useCallback(
+    () => goTo(Math.max(1, currentPage - 1)),
+    [goTo, currentPage],
+  );
+  const goNext = useCallback(
+    () => goTo(Math.min(totalPage, currentPage + 1)),
+    [goTo, currentPage, totalPage],
+  );
+
+  const baseBtn =
+    "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-white text-sm text-[var(--text)] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white";
 
   return (
-    <div className="flex mt-20 w-screen h-7 justify-center items-center gap-3">
-      <img
-        src="/assets/images/arrow_back2.svg"
-        className={`cursor-pointer ${
-          isFirstPage ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        onClick={!isFirstPage ? handleFirstButton : undefined}
-      />
+    <nav
+      className="mt-12 flex items-center justify-center gap-1.5"
+      aria-label="pagination"
+    >
+      <button
+        type="button"
+        className={baseBtn}
+        disabled={isFirstPage}
+        onClick={goFirst}
+        aria-label="first page"
+      >
+        «
+      </button>
+      <button
+        type="button"
+        className={baseBtn}
+        disabled={isFirstPage}
+        onClick={goPrev}
+        aria-label="previous page"
+      >
+        ‹
+      </button>
 
-      <img
-        src="/assets/images/arrow_back1.svg"
-        className={`cursor-pointer ${
-          isFirstPage ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        onClick={!isFirstPage ? handlePrevButton : undefined}
-      />
-
-      <div className="flex gap-2">
-        {pageNumbers.map((pageNumber) => (
+      {pageNumbers.map((n) => {
+        const active = n === currentPage;
+        return (
           <button
-            key={pageNumber}
-            className={`border-2 rounded-4xl w-8 h-8 cursor-pointer text-center ${
-              currentPage === pageNumber
-                ? "bg-blue-500 text-white"
-                : "bg-white text-black"
+            key={n}
+            type="button"
+            onClick={() => goTo(n)}
+            aria-current={active ? "page" : undefined}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold transition-colors ${
+              active
+                ? "bg-[var(--text)] text-white hover:bg-black"
+                : "border border-[var(--border)] bg-white text-[var(--text)] hover:border-gray-400 hover:bg-gray-50"
             }`}
-            onClick={() => setCurrentPage(pageNumber)}
           >
-            {pageNumber}
+            {n}
           </button>
-        ))}
-      </div>
+        );
+      })}
 
-      <img
-        src="/assets/images/arrow_front1.svg"
-        className={`cursor-pointer ${
-          isLastPage ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        onClick={isLastPage ? undefined : handleNextButton}
-      />
-
-      <img
-        src="/assets/images/arrow_front2.svg"
-        className={`cursor-pointer ${
-          isLastPage ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        onClick={isLastPage ? undefined : handleLastButton}
-      />
-    </div>
+      <button
+        type="button"
+        className={baseBtn}
+        disabled={isLastPage}
+        onClick={goNext}
+        aria-label="next page"
+      >
+        ›
+      </button>
+      <button
+        type="button"
+        className={baseBtn}
+        disabled={isLastPage}
+        onClick={goLast}
+        aria-label="last page"
+      >
+        »
+      </button>
+    </nav>
   );
 }
 
-export default Pagination;
+export default memo(Pagination);

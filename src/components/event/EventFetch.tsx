@@ -1,132 +1,195 @@
-import { useEffect, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useAtom } from "jotai";
-import { buttonGuAtom, currentGuAtom } from "../../jotai/atom.ts";
+import {
+  buttonGuAtom,
+  categoryAtom,
+  sortAtom,
+} from "../../jotai/atom";
+import type { SortKey } from "../../jotai/atom";
 import { get } from "../../apis";
-import { usePagination, useFetch } from "../../hooks";
-import { EventSkeleton, Pagination } from "../";
+import { useFetch, usePagination } from "../../hooks";
 import { EventType } from "../../types/EventType";
+import { getEnd, getStart, isOngoing } from "../../lib/date";
+import { CodeData } from "../../lib/Event";
+import Pagination from "../etc/Pagination";
+import SortSelect from "../etc/SortSelect";
+import EventGrid from "./EventGrid";
 
-// ⭐todo 관심사 분리
+const PAGE_SIZE = 12;
+const BATCH_SIZE = 1000;
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "default", label: "기본순" },
+  { value: "endSoon", label: "종료 임박순" },
+  { value: "newest", label: "최신순" },
+];
+
+interface ChipProps {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}
+
+const CategoryChip = memo(function CategoryChip({
+  label,
+  active,
+  onClick,
+}: ChipProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors ${
+        active
+          ? "border-[var(--text)] bg-[var(--text)] text-white hover:bg-black"
+          : "border-[var(--border)] bg-white text-[var(--text)] hover:border-gray-400 hover:bg-gray-50"
+      }`}
+    >
+      {label}
+    </button>
+  );
+});
 
 function EventFetch() {
-  const [totalItems, setTotalItems] = useState<number>(0);
-  const { currentPage, setCurrentPage } = usePagination({
-    totalItems,
-    divider: 10,
-  });
-
   const [buttonGu] = useAtom(buttonGuAtom);
-  const [currentGu] = useAtom(currentGuAtom);
+  const [category, setCategory] = useAtom(categoryAtom);
+  const [sort, setSort] = useAtom(sortAtom);
 
   const [allEvents, setAllEvents] = useState<EventType[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<EventType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const startIndex = (currentPage - 1) * 10 + 1;
-  const endIndex = currentPage * 10;
+  const [isLoading, setIsLoading] = useState(true);
 
-  // 전체 데이터 개수 가져오기 위함
   const totalCountRes = useFetch(get, `/culturalEventInfo/1/1`);
-  const totalDataCount =
+  const totalDataCount: number | undefined =
     totalCountRes?.data?.culturalEventInfo?.list_total_count;
 
-  // 최대치로 나눌 수 있는 1000개씩 나누기
   useEffect(() => {
-    const fetchAllEvents = async () => {
-      if (totalDataCount) {
-        const batchSize = 1000;
-        const totalRequests = Math.ceil(totalDataCount / batchSize);
-        const promises = [];
+    if (!totalDataCount) return;
+    let cancelled = false;
 
-        for (let i = 0; i < totalRequests; i++) {
-          const start = i * batchSize + 1;
-          const end = Math.min((i + 1) * batchSize, totalDataCount);
-          promises.push(get(`/culturalEventInfo/${start}/${end}`));
-        }
+    (async () => {
+      const totalRequests = Math.ceil(totalDataCount / BATCH_SIZE);
+      const promises = Array.from({ length: totalRequests }, (_, i) => {
+        const start = i * BATCH_SIZE + 1;
+        const end = Math.min((i + 1) * BATCH_SIZE, totalDataCount);
+        return get(`/culturalEventInfo/${start}/${end}`);
+      });
 
-        try {
-          const results = await Promise.all(promises);
-          const allData = results
-            .map((res) => res?.data?.culturalEventInfo?.row || [])
-            .flat();
-
-          setAllEvents(allData);
-          setIsLoading(false);
-        } catch (error) {
-          console.error(error);
-          setIsLoading(false);
-        }
+      try {
+        const results = await Promise.all(promises);
+        if (cancelled) return;
+        const flat = results.flatMap(
+          (res) => res?.data?.culturalEventInfo?.row ?? [],
+        );
+        setAllEvents(flat);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (!cancelled) setIsLoading(false);
       }
-    };
+    })();
 
-    if (totalDataCount) {
-      fetchAllEvents();
-    }
+    return () => {
+      cancelled = true;
+    };
   }, [totalDataCount]);
 
-  // 지역구 필터
-  useEffect(() => {
-    if (allEvents.length > 0) {
-      const selectedGu = buttonGu || currentGu; // 최초 접속 때에는 현재 접속 위치 기반의 지역구
+  const selectedGu = buttonGu;
 
-      const filtered = allEvents.filter(
-        (item: EventType) => item.GUNAME === selectedGu,
-      );
-
-      setFilteredEvents(filtered);
-      setTotalItems(filtered.length);
+  const filteredEvents = useMemo(() => {
+    let list = allEvents.filter((e) => isOngoing(e.DATE));
+    if (selectedGu) list = list.filter((e) => e.GUNAME === selectedGu);
+    if (category)
+      list = list.filter((e) => (e.CODENAME ?? "").includes(category));
+    if (sort === "endSoon") {
+      list = [...list].sort((a, b) => getEnd(a.DATE) - getEnd(b.DATE));
+    } else if (sort === "newest") {
+      list = [...list].sort((a, b) => getStart(b.DATE) - getStart(a.DATE));
     }
-  }, [allEvents, buttonGu, currentGu]);
+    return list;
+  }, [allEvents, selectedGu, category, sort]);
 
-  const paginatedEvents = filteredEvents.slice(startIndex - 1, endIndex);
+  const totalItems = filteredEvents.length;
+
+  const { currentPage, setCurrentPage } = usePagination({
+    totalItems,
+    divider: PAGE_SIZE,
+  });
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [buttonGu]);
+  }, [selectedGu, setCurrentPage]);
+
+  const pagedEvents = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredEvents.slice(start, start + PAGE_SIZE);
+  }, [filteredEvents, currentPage]);
+
+  const gridTopRef = useRef<HTMLDivElement | null>(null);
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      gridTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+    [setCurrentPage],
+  );
 
   return (
-    <>
-      <div className="flex w-screen justify-center mt-10">
-        <div className="grid w-10/12 grid-cols-5 gap-6 max-sm:grid-cols-2">
-          {isLoading
-            ? [...Array(10)].map((_, idx) => <EventSkeleton key={idx} />)
-            : paginatedEvents.map((item: EventType, idx: number) => {
-                return (
-                  <div
-                    key={idx}
-                    className="border-2 border-[#EFEFEF] rounded-2xl"
-                  >
-                    <a
-                      className="cursor-pointer"
-                      href={item.ORG_LINK}
-                      target="_blank"
-                    >
-                      <img
-                        className="w-full h-70 rounded-tl-xl rounded-tr-xl"
-                        src={item.MAIN_IMG}
-                      />
-                    </a>
-                    <div className="p-2">
-                      <div>
-                        {item.TITLE.length > 18
-                          ? item.TITLE.slice(0, 18) + "..."
-                          : item.TITLE}
-                      </div>
-                      <div className="max-sm:hidden">구분: {item.CODENAME}</div>
-                      <div className="max-sm:hidden">지역: {item.GUNAME}</div>
-                      <div className="max-sm:hidden">기간: {item.DATE}</div>
-                    </div>
-                  </div>
-                );
-              })}
+    <section className="mx-auto w-full max-w-6xl px-4 py-10 md:px-6">
+      <div ref={gridTopRef} className="scroll-mt-6" />
+      <div className="mb-5">
+        <h2 className="text-xl font-extrabold tracking-tight md:text-2xl">
+          {selectedGu ? `${selectedGu} 문화행사` : "서울시 문화행사"}
+        </h2>
+        <p className="mt-1 text-sm font-semibold text-[var(--text-muted)]">
+          총 {totalItems.toLocaleString()}건
+        </p>
+
+        <div className="no-scrollbar -mx-4 mt-4 overflow-x-auto px-4 md:mx-0 md:px-0">
+          <div className="flex flex-nowrap gap-2 md:flex-wrap">
+            <CategoryChip
+              label="전체"
+              active={category === null}
+              onClick={() => setCategory(null)}
+            />
+            {CodeData.map((name) => (
+              <CategoryChip
+                key={name}
+                label={name}
+                active={category === name}
+                onClick={() => setCategory(name)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-4 flex justify-end">
+          <SortSelect<SortKey>
+            value={sort}
+            options={SORT_OPTIONS}
+            onChange={setSort}
+          />
         </div>
       </div>
-      <Pagination
-        key={buttonGu}
-        totalItems={totalItems}
-        divider={10}
-        onPageChange={setCurrentPage}
-      />
-    </>
+
+      <EventGrid events={pagedEvents} loading={isLoading} />
+
+      {totalItems > PAGE_SIZE && (
+        <Pagination
+          key={selectedGu ?? "all"}
+          totalItems={totalItems}
+          divider={PAGE_SIZE}
+          onPageChange={handlePageChange}
+        />
+      )}
+    </section>
   );
 }
 
