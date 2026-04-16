@@ -17,7 +17,6 @@ import { get } from "../../apis";
 import { useFetch, usePagination } from "../../hooks";
 import { EventType } from "../../types/EventType";
 import { getEnd, getStart, isOngoing } from "../../lib/date";
-import { CodeData } from "../../lib/Event";
 import Pagination from "../etc/Pagination";
 import SortSelect from "../etc/SortSelect";
 import EventGrid from "./EventGrid";
@@ -63,6 +62,13 @@ function EventFetch() {
 
   const [allEvents, setAllEvents] = useState<EventType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const categories = useMemo(() => {
+    const names = new Set(
+      allEvents.map((e) => e.CODENAME).filter(Boolean),
+    );
+    return [...names].sort();
+  }, [allEvents]);
 
   const totalCountRes = useFetch(get, `/culturalEventInfo/1/1`);
   const totalDataCount: number | undefined =
@@ -162,7 +168,7 @@ function EventFetch() {
               active={category === null}
               onClick={() => setCategory(null)}
             />
-            {CodeData.map((name) => (
+            {categories.map((name) => (
               <CategoryChip
                 key={name}
                 label={name}
